@@ -1,9 +1,23 @@
 'use client';
 import styles from './page.module.css';
 import { ChangeEvent, FormEvent, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
   const [email, setEmail] = useState('');
+
+  const notify = () =>
+    toast.success('🦄 Success!', {
+      position: 'bottom-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -27,7 +41,7 @@ export default function Home() {
         throw new Error(data.message);
       } else {
         setEmail('');
-        alert(data.message);
+        notify();
       }
     } catch (e) {
       if (e instanceof Error) {
@@ -53,6 +67,18 @@ export default function Home() {
         <button type='submit' className={styles.button}>
           Subscribe
         </button>
+        <ToastContainer
+          position='bottom-right'
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme='light'
+        />
       </form>
     </div>
   );
