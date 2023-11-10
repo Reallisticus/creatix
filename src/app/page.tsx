@@ -1,19 +1,41 @@
 'use client';
-import Image from 'next/image';
 import styles from './page.module.css';
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 export default function Home() {
   const [email, setEmail] = useState('');
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: Implement your logic to handle email submission like sending to an API
-    alert('Thank you for subscribing!');
+
+    try {
+      const response = await fetch('/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message);
+      } else {
+        setEmail('');
+        alert(data.message);
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error({ message: e.message });
+      } else {
+        console.error({ message: 'Unknown error' });
+      }
+    }
   };
 
   return (
